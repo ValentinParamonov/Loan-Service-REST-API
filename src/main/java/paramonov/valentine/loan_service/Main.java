@@ -1,10 +1,17 @@
 package paramonov.valentine.loan_service;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.webapp.WebAppContext;
+import paramonov.valentine.loan_service.web.WebInitializer;
 
+import javax.servlet.ServletException;
+import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
@@ -34,18 +41,25 @@ public final class Main {
 
     private static void runServer(int portNumber) {
         final Server server = new Server(portNumber);
+
         try {
-            final URL sourceLocation = getSourceLocation();
-
-            final WebAppContext context = new WebAppContext();
-
-            server.start();
+            attachServletContextHandler(server)
+                .start();
             log.info("Server started at port {}", portNumber);
             server.join();
             log.info("Server finished");
         } catch(Exception e) {
-            log.error(e);
+            log.catching(Level.ERROR, e);
         }
+    }
+
+    private static Server attachServletContextHandler(Server server) throws IOException {
+        final WebInitializer initializer = new WebInitializer();
+        final Handler handler = initializer.newServletContextHandler();
+
+        server.setHandler(handler);
+
+        return server;
     }
 
     private static URL getSourceLocation() {
