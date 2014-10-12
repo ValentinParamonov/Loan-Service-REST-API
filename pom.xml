@@ -16,6 +16,14 @@
         <version.jetty>9.3.0.M0</version.jetty>
         <version.log4j>2.0.2</version.log4j>
         <version.spring>4.1.1.RELEASE</version.spring>
+        <version.maven-shade-plugin>2.3</version.maven-shade-plugin>
+        <version.sqlite-jdbc>3.7.2</version.sqlite-jdbc>
+        <version.hibernate-core>4.3.6.Final</version.hibernate-core>
+        <version.javassist>3.18.2-GA</version.javassist>
+        <version.HikariCP-java6>2.1.0</version.HikariCP-java6>
+        <version.h2>1.4.181</version.h2>
+        <version.junit>4.11</version.junit>
+        <version.mockito-all>1.9.5</version.mockito-all>
     </properties>
 
     <build>
@@ -32,18 +40,123 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${version.maven-jar-plugin}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>paramonov.valentine.loan_service.Main</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${version.maven-shade-plugin}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <minimizeJar>true</minimizeJar>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>paramonov.valentine.loan_service.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>commons-logging:commons-logging</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.apache.logging.log4j:log4j-core</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.apache.logging.log4j:log4j-api</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.springframework:spring-core</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.springframework:spring-beans</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.springframework:spring-webmvc</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.springframework:spring-web</artifact>
+                                    <includes>
+                                        <include>org/springframework/web/*</include>
+                                        <include>org/springframework/web/context/**</include>
+                                        <include>org/springframework/web/util/**</include>
+                                        <include>org/springframework/web/bind/**</include>
+                                        <include>org/springframework/web/method/**</include>
+                                        <include>org/springframework/web/accept/**</include>
+                                        <include>org/springframework/web/multipart/**</include>
+                                        <include>org/springframework/http/**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.hibernate:hibernate-core</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.jboss.logging:jboss-logging</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>org.hibernate.common:hibernate-commons-annotations</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+
+                                <filter>
+                                    <artifact>com.h2database:h2</artifact>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
+
+        <resources>
+            <resource>
+                <targetPath>res</targetPath>
+                <directory>src/main/resources/res</directory>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 
     <dependencies>
@@ -73,8 +186,59 @@
 
         <dependency>
             <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${version.spring}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${version.spring}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${version.spring}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${version.hibernate-core}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>${version.javassist}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP-java6</artifactId>
+            <version>${version.HikariCP-java6}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${version.h2}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>${version.mockito-all}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

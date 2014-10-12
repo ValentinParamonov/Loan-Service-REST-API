@@ -8,6 +8,7 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
+import paramonov.valentine.loan_service.web.handlers.ExceptionLoggingHandler;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,7 +18,7 @@ public final class WebInitializer {
     private static final String CONFIG_LOCATION = "paramonov.valentine.loan_service.web";
     private static final String MAPPING_URL = "/*";
     private static final String APP_ROOT = "/";
-    private static final String RESOURCE_BASE = "";
+    private static final String RESOURCE_BASE = "res";
 
     public Handler newServletContextHandler() throws IOException {
         final ServletContextHandler handler = new ServletContextHandler();
@@ -26,7 +27,7 @@ public final class WebInitializer {
         final EventListener contextLoaderListener = new ContextLoaderListener(context);
         final String resourceBase = getResourceBase();
 
-        handler.setErrorHandler(null);
+        handler.setErrorHandler(new ExceptionLoggingHandler());
         handler.setContextPath(APP_ROOT);
         handler.addServlet(dispatcherServletHolder, MAPPING_URL);
         handler.addEventListener(contextLoaderListener);
