@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -20,11 +21,32 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource({"classpath:res/jdbc.properties"})
+@PropertySource("classpath:res/jdbc.properties")
 @ComponentScan("paramonov.valentine.loan_service")
 class HibernateConfig {
     @Autowired
     private Environment environment;
+
+//    @Value("${hibernate.hdm2ddl.auto}")
+//    private String hdm2DllAuto;
+//
+//    @Value("${hibernate.dialect}")
+//    private String hibernateDialect;
+//
+//    @Value("${hibernate.globally_quoted_identifiers}")
+//    private String hibernateQuotedIdentifiers;
+
+    @Value("${hikari.dataSourceClassName}")
+    private String dataSourceClassName;
+
+    @Value("${hikari.dataSource.url}")
+    private String dataSourceUrl;
+
+    @Value("${hikari.dataSource.userName}")
+    private String dataSourceUserName;
+
+    @Value("${hikari.dataSource.password}")
+    private String dataSourcePassword;
 
     private Logger log;
     private final String[] packagesToScan = {
@@ -37,7 +59,8 @@ class HibernateConfig {
     }
 
     @Bean
-    public LocalSessionFactoryBean sessionFactory() {
+    @Autowired
+    public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         final String[] hibernatePropertyNames = {
             "hibernate.hdm2ddl.auto",
             "hibernate.dialect",
@@ -45,7 +68,6 @@ class HibernateConfig {
         };
         final LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         final Properties hibernateProperties = getProperties(hibernatePropertyNames);
-        final DataSource dataSource = dataSource();
 
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setPackagesToScan(packagesToScan);
@@ -56,16 +78,12 @@ class HibernateConfig {
 
     @Bean
     public DataSource dataSource() {
-        final String dataSourceClassName = environment.getProperty("hikari.dataSourceClassName");
-        final String url = environment.getProperty("hikari.dataSource.url");
-        final String userName = environment.getProperty("hikari.dataSource.userName");
-        final String password = environment.getProperty("hikari.dataSource.password");
         final HikariDataSource dataSource = new HikariDataSource();
 
         dataSource.setDataSourceClassName(dataSourceClassName);
-        dataSource.addDataSourceProperty("url", url);
-        dataSource.setUsername(userName);
-        dataSource.setPassword(password);
+        dataSource.addDataSourceProperty("url", dataSourceUrl);
+        dataSource.setUsername(dataSourceUserName);
+        dataSource.setPassword(dataSourcePassword);
 
         return dataSource;
     }

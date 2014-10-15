@@ -4,23 +4,26 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RestController;
+import paramonov.valentine.loan_service.common.dtos.LoanApplicationDto;
+import paramonov.valentine.loan_service.db.entities.User;
+import paramonov.valentine.loan_service.web.annotations.ActiveUser;
 import paramonov.valentine.loan_service.web.managers.LoanManager;
 import paramonov.valentine.loan_service.web.managers.RequestManager;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
+import java.math.BigDecimal;
 
-@Controller
+@RestController
 @RequestMapping(value = "/loan")
+@PreAuthorize("isAuthenticated()")
 class LoanController {
     @Autowired
     private LoanManager loanManager;
@@ -36,19 +39,25 @@ class LoanController {
     }
 
     @Transactional
-    @RequestMapping(value = "/apply", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
     public void apply(
-        @RequestParam(required = true) String amount,
-        @RequestParam(required = true) String term,
-        HttpServletRequest request) {
+        @RequestParam(required = true) BigDecimal amount,
+        @RequestParam(required = true) Integer term,
+        HttpServletRequest request,
+        @ActiveUser User user) {
 
         final String ipAddress = requestManager.getIpAddress(request);
+        final LoanApplicationDto application = new LoanApplicationDto()
+            .withApplicant(user)
+            .withAmount(amount)
+            .withTerm(term)
+            .withApplicantIp(ipAddress);
 
-        log.info("Request IP: {}", ipAddress);
-        log.info("Request User: {}", request.getRemoteUser());
-        log.info("Request Session ID: {}", request.getRequestedSessionId());
+        try {
+            loanManager.applyForLoan(application);
+        } catch(RuntimeException re) {
 
-        loanManager.sayHi();
+        }
     }
 }

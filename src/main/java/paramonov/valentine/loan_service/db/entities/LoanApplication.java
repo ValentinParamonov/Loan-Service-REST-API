@@ -77,15 +77,15 @@ public class LoanApplication {
         return this;
     }
 
-    @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("LoanApplication{");
-        sb.append("id=").append(id);
-        sb.append(", user=").append(user);
-        sb.append(", loanAmount=").append(loanAmount);
-        sb.append(", loanInterest=").append(loanInterest);
-        sb.append(", dueDate=").append(dueDate);
-        sb.append('}');
-
-        return sb.toString();
+    @Override
+    public String toString() {
+        return new StringBuilder("LoanApplication{")
+            .append("id=").append(id)
+            .append(", user=").append(user)
+            .append(", loanAmount=").append(loanAmount)
+            .append(", loanInterest=").append(loanInterest)
+            .append(", dueDate=").append(dueDate)
+            .append('}')
+            .toString();
     }
 }

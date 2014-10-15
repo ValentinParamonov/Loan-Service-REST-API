@@ -24,6 +24,7 @@
         <version.h2>1.4.181</version.h2>
         <version.junit>4.11</version.junit>
         <version.mockito-all>1.9.5</version.mockito-all>
+        <version.spring.security>3.2.5.RELEASE</version.spring.security>
     </properties>
 
     <build>
@@ -203,6 +204,24 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>${version.spring.security}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${version.spring.security}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${version.spring.security}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${version.hibernate-core}</version>
@@ -239,6 +258,12 @@
             <artifactId>mockito-all</artifactId>
             <version>${version.mockito-all}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt-spring31</artifactId>
+            <version>1.9.2</version>
         </dependency>
     </dependencies>
 </project>

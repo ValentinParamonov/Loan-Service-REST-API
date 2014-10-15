@@ -84,14 +84,13 @@ public class LoanEvent {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("LoanEvent{");
-        sb.append("id=").append(id);
-        sb.append(", user=").append(user);
-        sb.append(", application=").append(application);
-        sb.append(", eventStatus=").append(eventStatus);
-        sb.append(", eventDate=").append(eventDate);
-        sb.append('}');
-
-        return sb.toString();
+        return new StringBuilder("LoanEvent{")
+            .append("id=").append(id)
+            .append(", user=").append(user)
+            .append(", application=").append(application)
+            .append(", eventStatus=").append(eventStatus)
+            .append(", eventDate=").append(eventDate)
+            .append('}')
+            .toString();
     }
 }

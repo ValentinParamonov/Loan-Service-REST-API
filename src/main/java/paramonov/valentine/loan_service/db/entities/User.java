@@ -18,28 +18,42 @@ public class User {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "PASSWORD")
+    private String password;
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public User setId(Long id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public User setName(String name) {
         this.name = name;
+        return this;
     }
 
-    @Override public String toString() {
-        final StringBuilder sb = new StringBuilder("User{");
-        sb.append("id=").append(id);
-        sb.append(", name='").append(name).append('\'');
-        sb.append('}');
+    public String getPassword() {
+        return password;
+    }
 
-        return sb.toString();
+    public User setPassword(String password) {
+        this.password = password;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder("User{")
+            .append("id=").append(id)
+            .append(", name='").append(name).append('\'')
+            .append('}')
+            .toString();
     }
 }
