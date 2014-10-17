@@ -13,10 +13,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.Properties;
 
 @Configuration
@@ -27,17 +29,8 @@ class HibernateConfig {
     @Autowired
     private Environment environment;
 
-//    @Value("${hibernate.hdm2ddl.auto}")
-//    private String hdm2DllAuto;
-//
-//    @Value("${hibernate.dialect}")
-//    private String hibernateDialect;
-//
-//    @Value("${hibernate.globally_quoted_identifiers}")
-//    private String hibernateQuotedIdentifiers;
-
-    @Value("${hikari.dataSourceClassName}")
-    private String dataSourceClassName;
+    @Value("${hikari.dataSource.driverClassName}")
+    private String driverClassName;
 
     @Value("${hikari.dataSource.url}")
     private String dataSourceUrl;
@@ -62,7 +55,7 @@ class HibernateConfig {
     @Autowired
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
         final String[] hibernatePropertyNames = {
-            "hibernate.hdm2ddl.auto",
+            "hibernate.hbm2ddl.auto",
             "hibernate.dialect",
             "hibernate.globally_quoted_identifiers"
         };
@@ -80,8 +73,8 @@ class HibernateConfig {
     public DataSource dataSource() {
         final HikariDataSource dataSource = new HikariDataSource();
 
-        dataSource.setDataSourceClassName(dataSourceClassName);
-        dataSource.addDataSourceProperty("url", dataSourceUrl);
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setJdbcUrl(dataSourceUrl);
         dataSource.setUsername(dataSourceUserName);
         dataSource.setPassword(dataSourcePassword);
 
@@ -90,7 +83,7 @@ class HibernateConfig {
 
     @Bean
     @Autowired
-    public HibernateTransactionManager txManager(SessionFactory sessionFactory) {
+    public PlatformTransactionManager txManager(SessionFactory sessionFactory) {
         return new HibernateTransactionManager(sessionFactory);
     }
 

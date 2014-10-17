@@ -30,6 +30,9 @@ public class LoanEvent {
     @JoinColumn(name = "APPLICATION")
     private LoanApplication application;
 
+    @Column(name = "APPLICANT_IP")
+    private String applicantIp;
+
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private LoanEventStatus eventStatus;
@@ -64,6 +67,15 @@ public class LoanEvent {
         return this;
     }
 
+    public String getApplicantIp() {
+        return applicantIp;
+    }
+
+    public LoanEvent setApplicantIp(String applicantIp) {
+        this.applicantIp = applicantIp;
+        return this;
+    }
+
     public LoanEventStatus getEventStatus() {
         return eventStatus;
     }
@@ -88,6 +100,7 @@ public class LoanEvent {
             .append("id=").append(id)
             .append(", user=").append(user)
             .append(", application=").append(application)
+            .append(", applicantIp='").append(applicantIp).append('\'')
             .append(", eventStatus=").append(eventStatus)
             .append(", eventDate=").append(eventDate)
             .append('}')

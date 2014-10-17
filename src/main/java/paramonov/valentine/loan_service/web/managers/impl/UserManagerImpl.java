@@ -9,7 +9,7 @@ import paramonov.valentine.loan_service.web.managers.UserManager;
 import paramonov.valentine.loan_service.web.managers.exceptions.UserNameAlreadyExistsException;
 
 @Component("userManager")
-public class UserManagerImpl implements UserManager {
+class UserManagerImpl implements UserManager {
     @Autowired
     private UserRepository userRepository;
 

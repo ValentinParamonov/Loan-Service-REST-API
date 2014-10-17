@@ -15,12 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
-class SecurityController {
+@RequestMapping(value = "/user")
+class UserController {
     @Autowired
     private UserManager userManager;
 
     @Transactional
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void register(
         @RequestParam(required = true) String userName,

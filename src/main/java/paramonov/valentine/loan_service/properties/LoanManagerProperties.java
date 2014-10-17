@@ -6,8 +6,18 @@ import java.math.BigDecimal;
 
 public interface LoanManagerProperties {
     Time getRiskyTimeFrom();
+
     Time getRiskyTimeTill();
+
     Integer getMaxApplicationsPerDay();
+
+    BigDecimal getMinAmount();
+
     BigDecimal getMaxAmount();
+
+    BigDecimal getDefaultInterest();
+
+    Integer getMinTermDays();
+
     Integer getMaxTermDays();
 }
