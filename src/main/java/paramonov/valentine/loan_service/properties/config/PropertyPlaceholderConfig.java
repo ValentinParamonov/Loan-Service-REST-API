@@ -24,7 +24,7 @@ import java.util.Map;
 class PropertyPlaceholderConfig {
     @Bean
     @Autowired
-    public PropertyResourceConfigurer loanServiceProperties(StringEncryptor encryptor) {
+    public static PropertyResourceConfigurer loanServiceProperties(StringEncryptor encryptor) {
         final EncryptablePropertyPlaceholderConfigurer configurer =
             new EncryptablePropertyPlaceholderConfigurer(encryptor);
         final Resource[] resourceLocations = getLocations();
@@ -44,7 +44,7 @@ class PropertyPlaceholderConfig {
     }
 
     @Bean
-    public CustomEditorConfigurer editorConfigurer() {
+    public static CustomEditorConfigurer editorConfigurer() {
         final CustomEditorConfigurer configurer = new CustomEditorConfigurer();
         final Map<Class<?>, Class<? extends PropertyEditor>> editors = new HashMap<>();
         final Map<Class<?>, Class<? extends PropertyEditor>> immutableEditors = Collections.unmodifiableMap(editors);
@@ -55,7 +55,7 @@ class PropertyPlaceholderConfig {
         return configurer;
     }
 
-    private Resource[] getLocations() {
+    private static Resource[] getLocations() {
         final String[] sources = getSources();
         if(sources == null || sources.length == 0) {
             return new Resource[0];
@@ -64,7 +64,7 @@ class PropertyPlaceholderConfig {
         return getResources(sources);
     }
 
-    private Resource[] getResources(String[] sources) {
+    private static Resource[] getResources(String[] sources) {
         final StaticApplicationContext context = new StaticApplicationContext();
         final int numSources = sources.length;
         final Resource[] resources = new Resource[numSources];
@@ -76,7 +76,7 @@ class PropertyPlaceholderConfig {
         return resources;
     }
 
-    private String[] getSources() {
+    private static String[] getSources() {
         final Class<PropertyPlaceholderConfig> configClass = PropertyPlaceholderConfig.class;
         final PropertySource propertySourceAnnotation = configClass.getAnnotation(PropertySource.class);
 

@@ -12,7 +12,7 @@ import paramonov.valentine.loan_service.web.managers.exceptions.ApplicationDenie
 import java.math.BigDecimal;
 
 @Component("riskManager")
-public class RiskManagerImpl implements RiskManager {
+class RiskManagerImpl implements RiskManager {
     @Autowired
     private LoanManagerProperties loanManagerProperties;
 
@@ -20,16 +20,17 @@ public class RiskManagerImpl implements RiskManager {
     private LoanEventRepository loanEventRepository;
 
     @Override
-    public void analyzeRisks(LoanApplicationVo application) {
-        if(isMaxAmount(application)) {
+    public void analyzeRisks(LoanApplicationVo applicationDetails) {
+        if(isMaxAmount(applicationDetails)) {
             checkRiskyTime();
         }
 
-        checkNumberOfApplications(application);
+        checkNumberOfApplications(applicationDetails);
     }
 
-    private void checkNumberOfApplications(LoanApplicationVo application) {
-        final String applicantIp = application.getApplicantIp();
+    @Override
+    public void checkNumberOfApplications(LoanApplicationVo applicationDetails) {
+        final String applicantIp = applicationDetails.getApplicantIp();
         final int numberOfApplications = loanEventRepository.getNumberOfApplicationsInLast24Hours(applicantIp);
         final int maxApplicationsPerDay = loanManagerProperties.getMaxApplicationsPerDay();
 

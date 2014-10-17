@@ -6,4 +6,6 @@ import java.math.BigDecimal;
 
 public interface LoanServiceVoBuilder {
     LoanApplicationVo newLoanApplicationVo(User applicant, BigDecimal amount, Integer term, String applicantIp);
+
+    LoanApplicationVo newLoanApplicationVo(User user, String ipAddress);
 }

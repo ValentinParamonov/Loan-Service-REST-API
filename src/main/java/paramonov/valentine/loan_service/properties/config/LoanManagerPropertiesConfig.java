@@ -10,29 +10,35 @@ import java.math.BigDecimal;
 
 @Configuration
 class LoanManagerPropertiesConfig {
-    @Value("${loan.manager.minTermDays}")
+    @Value("${loan.manager.minTermDays:7}")
     private Integer minTermDays;
 
-    @Value("${loan.manager.maxTermDays}")
+    @Value("${loan.manager.maxTermDays:30}")
     private Integer maxTermDays;
 
-    @Value("${loan.manager.maxApplicationsPerDay}")
+    @Value("${loan.manager.maxApplicationsPerDay:3}")
     private Integer maxApplicationsPerDay;
 
-    @Value("${loan.manager.minAmount}")
+    @Value("${loan.manager.minAmount:50}")
     private BigDecimal minAmount;
 
-    @Value("${loan.manager.maxAmount}")
+    @Value("${loan.manager.maxAmount:500}")
     private BigDecimal maxAmount;
 
-    @Value("${loan.manager.defaultInterest}")
+    @Value("${loan.manager.defaultInterest:1.1}")
     private BigDecimal defaultInterest;
 
-    @Value("${loan.manager.riskyTimeFrom}")
+    @Value("${loan.manager.riskyTimeFrom:0}")
     private Time riskyTimeFrom;
 
-    @Value("${loan.manager.riskyTimeTill}")
+    @Value("${loan.manager.riskyTimeTill:0}")
     private Time riskyTimeTill;
+
+    @Value("${loan.manager.extension.termDays:7}")
+    private Integer extensionTermDays;
+
+    @Value("${loan.manager.extension.interestFactor:1.5}")
+    private BigDecimal extensionInterestFactor;
 
     @Bean
     public LoanManagerProperties loanManagerProperties() {
@@ -72,6 +78,14 @@ class LoanManagerPropertiesConfig {
             @Override
             public Integer getMaxTermDays() {
                 return maxTermDays;
+            }
+
+            @Override public Integer getExtensionTermDays() {
+                return extensionTermDays;
+            }
+
+            @Override public BigDecimal getExtensionInterestFactor() {
+                return extensionInterestFactor;
             }
         };
     }

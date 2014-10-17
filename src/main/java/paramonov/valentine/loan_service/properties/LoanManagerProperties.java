@@ -20,4 +20,8 @@ public interface LoanManagerProperties {
     Integer getMinTermDays();
 
     Integer getMaxTermDays();
+
+    Integer getExtensionTermDays();
+
+    BigDecimal getExtensionInterestFactor();
 }
