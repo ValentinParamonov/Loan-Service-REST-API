@@ -44,28 +44,28 @@ Error Response:   Status 400 (Bad Request) if :amount is unacceptable
    
 #####Extend Loan Term
 ```
-    Url:                /loans/:applicationId
-    Authentication:     Basic
-    Method:             POST
-    Params:             applicationId=[integer] Required
-    Success Response:   Status 2O0 (OK)
-    Error Response:     Status 400 (Bad Request) if :applicationId is invalid
-                        Content: { error : "Invalid application id" }
+Url:                /loans/:applicationId
+Authentication:     Basic
+Method:             POST
+Params:             applicationId=[integer] Required
+Success Response:   Status 2O0 (OK)
+Error Response:     Status 400 (Bad Request) if :applicationId is invalid
+                    Content: { error : "Invalid application id" }
                         
-                        Status 403 (Forbidden) if application was rejected
-                        Content: { error : "Extension application rejected" }
+                    Status 403 (Forbidden) if application was rejected
+                    Content: { error : "Extension application rejected" }
 ```
 #####Get Loan History
 ```
-    Url:                /loans
-    Authentication:     Basic
-    Method:             GET
-    Params:             none
-    Success Response:   Status 2O0 (OK)
-                        Content: [{
-                            applicationId : [integer],
-                            eventDate : [integer],
-                            eventStatus : [string]
-                        }]
-    Error Response:     Status 500 (Internal Server Error)
+Url:                /loans
+Authentication:     Basic
+Method:             GET
+Params:             none
+Success Response:   Status 2O0 (OK)
+                    Content: [{
+                        applicationId : [integer],
+                        eventDate : [integer],
+                        eventStatus : [string]
+                    }]
+Error Response:     Status 500 (Internal Server Error)
 ```
