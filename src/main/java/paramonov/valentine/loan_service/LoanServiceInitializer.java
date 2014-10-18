@@ -1,5 +1,8 @@
-package paramonov.valentine.loan_service.web;
+package paramonov.valentine.loan_service;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -7,9 +10,9 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
+import paramonov.valentine.loan_service.server.Initializer;
 import paramonov.valentine.loan_service.web.handlers.ExceptionLoggingHandler;
 
 import javax.servlet.DispatcherType;
@@ -18,15 +21,33 @@ import java.net.URI;
 import java.util.EnumSet;
 import java.util.EventListener;
 
-public final class WebInitializer {
-    private static final String CONFIG_LOCATION = "paramonov.valentine.loan_service.web";
+public final class LoanServiceInitializer implements Initializer {
     private static final String MAPPING_URL = "/*";
     private static final String APP_ROOT = "/";
     private static final String RESOURCE_BASE = "res";
 
-    public Handler newServletContextHandler() throws IOException {
+    private Logger log;
+    private WebApplicationContext context;
+
+    private LoanServiceInitializer() {
+    }
+
+    private void init() {
+        log = LogManager.getLogger(getClass());
+    }
+
+    public static LoanServiceInitializer fromContext(WebApplicationContext context) {
+        final LoanServiceInitializer initializer = new LoanServiceInitializer();
+
+        initializer.init();
+        initializer.context = context;
+
+        return initializer;
+    }
+
+    @Override
+    public Handler getHandler() {
         final ServletContextHandler handler = new ServletContextHandler();
-        final WebApplicationContext context = getWebAppContext();
         final String resourceBase = getResourceBase();
         final ExceptionLoggingHandler errorHandler = new ExceptionLoggingHandler();
 
@@ -73,17 +94,16 @@ public final class WebInitializer {
         handler.addServlet(dispatcherServletHolder, MAPPING_URL);
     }
 
-    private String getResourceBase() throws IOException {
+    private String getResourceBase() {
         final ClassPathResource classPathResource = new ClassPathResource(RESOURCE_BASE);
-        final URI resourceBaseUri = classPathResource.getURI();
+        final URI resourceBaseUri;
+        try {
+            resourceBaseUri = classPathResource.getURI();
+        } catch(IOException ioe) {
+            log.catching(Level.ERROR, ioe);
+            return "";
+        }
 
         return resourceBaseUri.toString();
-    }
-
-    private WebApplicationContext getWebAppContext() {
-        final AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
-        context.setConfigLocation(CONFIG_LOCATION);
-
-        return context;
     }
 }

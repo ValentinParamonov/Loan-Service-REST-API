@@ -1,23 +1,14 @@
 package paramonov.valentine.loan_service;
 
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import paramonov.valentine.loan_service.web.WebInitializer;
-
-import java.io.IOException;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import paramonov.valentine.loan_service.server.ServerRunner;
+import paramonov.valentine.loan_service.server.ServerRunnerBuilder;
 
 public final class Main {
     private static final int DEFAULT_PORT = 8080;
     private static final int PORT_NUMBER_INDEX = 0;
-    private static final Logger log;
-
-    static {
-        final String className = Main.class.getName();
-        log = LogManager.getLogger(className);
-    }
+    private static final String CONFIG_LOCATION = "paramonov.valentine.loan_service.web";
 
     private Main() {
     }
@@ -28,30 +19,26 @@ public final class Main {
         }
 
         final int portNumber = parsePortNumber(args);
+        final WebApplicationContext context = getContext();
+        final LoanServiceInitializer initializer = LoanServiceInitializer.fromContext(context);
 
-        runServer(portNumber);
+        final ServerRunner runner = ServerRunnerBuilder.config()
+            .port(portNumber)
+            .initializer(initializer)
+            .runner();
+
+        runInCurrentThread(runner);
     }
 
-    private static void runServer(int portNumber) {
-        final Server server = new Server(portNumber);
-        try {
-            attachServletContextHandler(server)
-                .start();
-            log.info("Server started at port {}", portNumber);
-            server.join();
-            log.info("Server finished");
-        } catch(Exception e) {
-            log.catching(Level.ERROR, e);
-        }
+    private static void runInCurrentThread(ServerRunner runner) {
+        runner.run();
     }
 
-    private static Server attachServletContextHandler(Server server) throws IOException {
-        final WebInitializer initializer = new WebInitializer();
-        final Handler handler = initializer.newServletContextHandler();
+    private static WebApplicationContext getContext() {
+        final AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
+        context.setConfigLocation(CONFIG_LOCATION);
 
-        server.setHandler(handler);
-
-        return server;
+        return context;
     }
 
     private static void printUsageAndExit() {

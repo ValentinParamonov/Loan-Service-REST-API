@@ -22,7 +22,7 @@ class UserController {
 
     @Transactional
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void register(
         @RequestParam(required = true) String userName,
         @RequestParam(required = true) String password,
