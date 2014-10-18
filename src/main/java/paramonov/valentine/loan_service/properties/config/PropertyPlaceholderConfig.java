@@ -24,7 +24,7 @@ import java.util.Map;
 class PropertyPlaceholderConfig {
     @Bean
     @Autowired
-    public static PropertyResourceConfigurer loanServiceProperties(StringEncryptor encryptor) {
+    public static PropertyResourceConfigurer propertyResourceConfigurer(StringEncryptor encryptor) {
         final EncryptablePropertyPlaceholderConfigurer configurer =
             new EncryptablePropertyPlaceholderConfigurer(encryptor);
         final Resource[] resourceLocations = getLocations();

@@ -23,4 +23,12 @@ public final class DateUtils {
 
         return calendar.getTime();
     }
+
+    public static Date getDate24HoursAgo() {
+        final Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.HOUR_OF_DAY, -24);
+
+        return calendar.getTime();
+    }
 }

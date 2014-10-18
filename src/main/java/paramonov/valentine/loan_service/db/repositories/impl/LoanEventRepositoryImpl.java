@@ -14,9 +14,11 @@ import paramonov.valentine.loan_service.db.entities.LoanApplication;
 import paramonov.valentine.loan_service.db.entities.LoanEvent;
 import paramonov.valentine.loan_service.db.entities.User;
 import paramonov.valentine.loan_service.db.repositories.LoanEventRepository;
+import paramonov.valentine.loan_service.util.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Repository("loanEventRepository")
 class LoanEventRepositoryImpl implements LoanEventRepository {
@@ -42,13 +44,14 @@ class LoanEventRepositoryImpl implements LoanEventRepository {
 
     @Override
     public int getNumberOfApplicationsInLast24Hours(String ipAddress) {
-        final Date date24HoursAgo = getDate24HoursAgo();
+        final Date date24HoursAgo = DateUtils.getDate24HoursAgo();
         final Session session = sessionFactory.getCurrentSession();
         final SimpleExpression eqApplicantIp = Restrictions.eq("applicantIp", ipAddress);
         final SimpleExpression geEventDate = Restrictions.ge("eventDate", date24HoursAgo);
         final Projection rowCount = Projections.rowCount();
 
-        final Long numberOfApplications = (Long) session.createCriteria(LoanEvent.class)
+        final Long numberOfApplications = (Long) session
+            .createCriteria(LoanEvent.class)
             .add(eqApplicantIp)
             .add(geEventDate)
             .setProjection(rowCount)
@@ -57,11 +60,16 @@ class LoanEventRepositoryImpl implements LoanEventRepository {
         return numberOfApplications.intValue();
     }
 
-    private Date getDate24HoursAgo() {
-        final Calendar calendar = Calendar.getInstance();
+    @Override
+    public List<LoanEvent> getHistoricEventsForUser(User user) {
+        final Session session = sessionFactory.getCurrentSession();
+        final SimpleExpression eqUser = Restrictions.eq("user", user);
+        final SimpleExpression neStatus = Restrictions.ne("eventStatus", LoanEventStatus.DENIED);
 
-        calendar.add(Calendar.HOUR_OF_DAY, -24);
-
-        return calendar.getTime();
+        return session
+            .createCriteria(LoanEvent.class)
+            .add(eqUser)
+            .add(neStatus)
+            .list();
     }
 }

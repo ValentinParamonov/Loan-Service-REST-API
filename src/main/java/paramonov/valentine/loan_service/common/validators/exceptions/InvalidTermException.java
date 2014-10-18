@@ -1,4 +1,4 @@
-package paramonov.valentine.loan_service.web.managers.exceptions;
+package paramonov.valentine.loan_service.common.validators.exceptions;
 
 public class InvalidTermException extends IllegalArgumentException {
 }

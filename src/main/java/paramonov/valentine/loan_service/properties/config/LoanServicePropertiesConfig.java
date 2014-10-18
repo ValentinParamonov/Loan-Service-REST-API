@@ -3,46 +3,46 @@ package paramonov.valentine.loan_service.properties.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import paramonov.valentine.loan_service.properties.LoanManagerProperties;
+import paramonov.valentine.loan_service.properties.LoanServiceProperties;
 import paramonov.valentine.loan_service.util.Time;
 
 import java.math.BigDecimal;
 
 @Configuration
-class LoanManagerPropertiesConfig {
-    @Value("${loan.manager.minTermDays:7}")
+class LoanServicePropertiesConfig {
+    @Value("${loan.service.minTermDays:7}")
     private Integer minTermDays;
 
-    @Value("${loan.manager.maxTermDays:30}")
+    @Value("${loan.service.maxTermDays:30}")
     private Integer maxTermDays;
 
-    @Value("${loan.manager.maxApplicationsPerDay:3}")
+    @Value("${loan.service.maxApplicationsPerDay:3}")
     private Integer maxApplicationsPerDay;
 
-    @Value("${loan.manager.minAmount:50}")
+    @Value("${loan.service.minAmount:50}")
     private BigDecimal minAmount;
 
-    @Value("${loan.manager.maxAmount:500}")
+    @Value("${loan.service.maxAmount:500}")
     private BigDecimal maxAmount;
 
-    @Value("${loan.manager.defaultInterest:1.1}")
+    @Value("${loan.service.defaultInterest:1.1}")
     private BigDecimal defaultInterest;
 
-    @Value("${loan.manager.riskyTimeFrom:0}")
+    @Value("${loan.service.riskyTimeFrom:0}")
     private Time riskyTimeFrom;
 
-    @Value("${loan.manager.riskyTimeTill:0}")
+    @Value("${loan.service.riskyTimeTill:0}")
     private Time riskyTimeTill;
 
-    @Value("${loan.manager.extension.termDays:7}")
+    @Value("${loan.service.extension.termDays:7}")
     private Integer extensionTermDays;
 
-    @Value("${loan.manager.extension.interestFactor:1.5}")
+    @Value("${loan.service.extension.interestFactor:1.5}")
     private BigDecimal extensionInterestFactor;
 
     @Bean
-    public LoanManagerProperties loanManagerProperties() {
-        return new LoanManagerProperties() {
+    public LoanServiceProperties loanServiceProperties() {
+        return new LoanServiceProperties() {
             @Override
             public Time getRiskyTimeFrom() {
                 return riskyTimeFrom;

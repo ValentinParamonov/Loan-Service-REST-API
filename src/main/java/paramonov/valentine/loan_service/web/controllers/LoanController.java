@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import paramonov.valentine.loan_service.common.dtos.LoanHistoryDto;
+import paramonov.valentine.loan_service.common.dtos.LoanEventDto;
 import paramonov.valentine.loan_service.common.vos.LoanApplicationVo;
 import paramonov.valentine.loan_service.common.vos.LoanServiceVoBuilder;
 import paramonov.valentine.loan_service.db.entities.User;
@@ -21,9 +21,9 @@ import paramonov.valentine.loan_service.web.annotations.ActiveUser;
 import paramonov.valentine.loan_service.web.managers.LoanManager;
 import paramonov.valentine.loan_service.web.managers.RequestManager;
 import paramonov.valentine.loan_service.web.managers.exceptions.ApplicationDeniedException;
-import paramonov.valentine.loan_service.web.managers.exceptions.InvalidAmountException;
+import paramonov.valentine.loan_service.common.validators.exceptions.InvalidAmountException;
 import paramonov.valentine.loan_service.web.managers.exceptions.InvalidApplicationIdException;
-import paramonov.valentine.loan_service.web.managers.exceptions.InvalidTermException;
+import paramonov.valentine.loan_service.common.validators.exceptions.InvalidTermException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -102,7 +102,7 @@ class LoanController {
     @Transactional(readOnly = true)
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseStatus(org.springframework.http.HttpStatus.OK)
-    public @ResponseBody List<LoanHistoryDto> getHistory(@ActiveUser User user) {
+    public @ResponseBody List<LoanEventDto> getHistory(@ActiveUser User user) {
         return loanManager.getLoanHistory(user);
     }
 }

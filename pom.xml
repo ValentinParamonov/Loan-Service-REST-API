@@ -23,10 +23,11 @@
         <version.HikariCP-java6>2.1.0</version.HikariCP-java6>
         <version.h2>1.4.181</version.h2>
         <version.junit>4.11</version.junit>
-        <version.mockito-all>1.9.5</version.mockito-all>
+        <version.mockito-all>1.10.8</version.mockito-all>
         <version.spring.security>3.2.5.RELEASE</version.spring.security>
         <version.jackson>2.4.2</version.jackson>
         <version.jasypt>1.9.2</version.jasypt>
+        <version.cucumber>1.1.8</version.cucumber>
     </properties>
 
     <build>
@@ -168,7 +169,6 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>${version.jetty}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -187,21 +187,18 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${version.spring}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <version>${version.spring}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
             <version>${version.spring}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -214,35 +211,30 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
             <version>${version.spring.security}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-web</artifactId>
             <version>${version.spring.security}</version>
-            <!--<scope>compile</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <version>${version.spring.security}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${version.hibernate-core}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>org.javassist</groupId>
             <artifactId>javassist</artifactId>
             <version>${version.javassist}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -262,14 +254,12 @@
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt-spring31</artifactId>
             <version>${version.jasypt}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-base</artifactId>
             <version>${version.jackson}</version>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -290,6 +280,20 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${version.spring}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>${version.cucumber}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${version.cucumber}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

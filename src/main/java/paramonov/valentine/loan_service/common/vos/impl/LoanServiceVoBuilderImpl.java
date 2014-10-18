@@ -10,7 +10,7 @@ import javax.naming.OperationNotSupportedException;
 import java.math.BigDecimal;
 
 @Component("loanServiceVoBuilder")
-public class LoanServiceVoBuilderImpl implements LoanServiceVoBuilder {
+class LoanServiceVoBuilderImpl implements LoanServiceVoBuilder {
     @Override
     public LoanApplicationVo newLoanApplicationVo(final User applicant, final BigDecimal amount, final Integer term,
         final String applicantIp) {

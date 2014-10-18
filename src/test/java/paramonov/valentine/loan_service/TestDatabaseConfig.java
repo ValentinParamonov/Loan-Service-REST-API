@@ -16,7 +16,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-public class TestConfig {
+public class TestDatabaseConfig {
     @Bean
     @Autowired
     public LocalSessionFactoryBean sessionFactory(DataSource dataSource) {

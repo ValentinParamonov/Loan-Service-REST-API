@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import paramonov.valentine.loan_service.TestConfig;
+import paramonov.valentine.loan_service.TestDatabaseConfig;
 import paramonov.valentine.loan_service.common.LoanEventStatus;
 import paramonov.valentine.loan_service.common.vos.LoanApplicationVo;
 import paramonov.valentine.loan_service.db.entities.LoanApplication;
@@ -25,7 +25,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestConfig.class, LoanRepositoryImplTestConfig.class})
+@ContextConfiguration(classes = {TestDatabaseConfig.class, LoanRepositoryImplTestConfig.class})
 @TransactionConfiguration(defaultRollback = false)
 public class LoanEventRepositoryImplTest {
     private static final String IP_ADDRESS = "ip";

@@ -5,28 +5,26 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import paramonov.valentine.loan_service.common.LoanEventStatus;
-import paramonov.valentine.loan_service.common.dtos.LoanHistoryDto;
+import paramonov.valentine.loan_service.common.dtos.LoanEventDto;
 import paramonov.valentine.loan_service.common.loggers.LoanEventLogger;
+import paramonov.valentine.loan_service.common.validators.LoanApplicationValidator;
 import paramonov.valentine.loan_service.common.vos.LoanApplicationVo;
 import paramonov.valentine.loan_service.db.entities.LoanApplication;
+import paramonov.valentine.loan_service.db.entities.LoanEvent;
 import paramonov.valentine.loan_service.db.entities.User;
 import paramonov.valentine.loan_service.db.repositories.GenericRepository;
 import paramonov.valentine.loan_service.db.repositories.LoanApplicationRepository;
 import paramonov.valentine.loan_service.db.repositories.LoanEventRepository;
-import paramonov.valentine.loan_service.properties.LoanManagerProperties;
+import paramonov.valentine.loan_service.properties.LoanServiceProperties;
 import paramonov.valentine.loan_service.util.DateUtils;
-import paramonov.valentine.loan_service.util.ValidationUtils;
 import paramonov.valentine.loan_service.web.managers.LoanManager;
 import paramonov.valentine.loan_service.web.managers.RiskManager;
 import paramonov.valentine.loan_service.web.managers.exceptions.ApplicationDeniedException;
-import paramonov.valentine.loan_service.web.managers.exceptions.InvalidAmountException;
 import paramonov.valentine.loan_service.web.managers.exceptions.InvalidApplicationIdException;
-import paramonov.valentine.loan_service.web.managers.exceptions.InvalidTermException;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -39,13 +37,19 @@ final class LoanManagerImpl implements LoanManager {
     private GenericRepository genericRepository;
 
     @Autowired
-    private LoanManagerProperties loanManagerProperties;
+    private LoanEventRepository loanEventRepository;
+
+    @Autowired
+    private LoanServiceProperties loanServiceProperties;
 
     @Autowired
     private RiskManager riskManager;
 
     @Autowired
     private LoanEventLogger eventLogger;
+
+    @Autowired
+    private LoanApplicationValidator loanApplicationValidator;
 
     private Logger log;
 
@@ -56,7 +60,7 @@ final class LoanManagerImpl implements LoanManager {
 
     @Override
     public void applyForLoan(LoanApplicationVo applicationDetails) {
-        validateLoanApplication(applicationDetails);
+        loanApplicationValidator.validateLoanApplication(applicationDetails);
         try {
             riskManager.analyzeRisks(applicationDetails);
         } catch(ApplicationDeniedException ade) {
@@ -71,8 +75,10 @@ final class LoanManagerImpl implements LoanManager {
     }
 
     @Override
-    public List<LoanHistoryDto> getLoanHistory(User user) {
-        return new ArrayList<LoanHistoryDto>(Arrays.asList(new LoanHistoryDto()));
+    public List<LoanEventDto> getLoanHistory(User user) {
+        List<LoanEvent> events = loanEventRepository.getHistoricEventsForUser(user);
+
+        return getEventDtos(events);
     }
 
     @Override
@@ -95,9 +101,32 @@ final class LoanManagerImpl implements LoanManager {
         eventLogger.logApplicationExtension(applicationDetails, application);
     }
 
+    private List<LoanEventDto> getEventDtos(List<LoanEvent> events) {
+        final int eventCount = events.size();
+        final ArrayList<LoanEventDto> eventDtos = new ArrayList<>(eventCount);
+        for(LoanEvent event : events) {
+            final LoanEventDto eventDto = getEventDto(event);
+            eventDtos.add(eventDto);
+        }
+
+        return eventDtos;
+    }
+
+    private LoanEventDto getEventDto(LoanEvent event) {
+        final Date eventDate = event.getEventDate();
+        final LoanEventStatus eventStatus = event.getEventStatus();
+        final LoanApplication application = event.getApplication();
+        final Long applicationId = application.getId();
+
+        return new LoanEventDto()
+            .withApplicationId(applicationId)
+            .withEventStatus(eventStatus)
+            .withEventDate(eventDate);
+    }
+
     private void extendLoan(LoanApplication application) {
-        final Integer extensionTerm = loanManagerProperties.getExtensionTermDays();
-        final BigDecimal interestFactor = loanManagerProperties.getExtensionInterestFactor();
+        final Integer extensionTerm = loanServiceProperties.getExtensionTermDays();
+        final BigDecimal interestFactor = loanServiceProperties.getExtensionInterestFactor();
         final Date dueDate = application.getDueDate();
         final BigDecimal interest = application.getLoanInterest();
         final Date newDueDate = DateUtils.getDateAfterDays(dueDate, extensionTerm);
@@ -113,38 +142,12 @@ final class LoanManagerImpl implements LoanManager {
         final User applicant = application.getApplicant();
         final Integer term = application.getTerm();
         final Date dueDate = DateUtils.getDateAfterDays(term);
-        final BigDecimal interest = loanManagerProperties.getDefaultInterest();
+        final BigDecimal interest = loanServiceProperties.getDefaultInterest();
 
         return new LoanApplication()
             .setLoanAmount(amount)
             .setLoanInterest(interest)
             .setUser(applicant)
             .setDueDate(dueDate);
-    }
-
-    private void validateLoanApplication(LoanApplicationVo application) {
-        final BigDecimal applicationAmount = application.getAmount();
-        final Integer term = application.getTerm();
-
-        validateAmount(applicationAmount);
-        validateTerm(term);
-    }
-
-    private void validateAmount(BigDecimal applicationAmount) {
-        final BigDecimal minAmount = loanManagerProperties.getMinAmount();
-        final BigDecimal maxAmount = loanManagerProperties.getMaxAmount();
-
-        if(!ValidationUtils.isBetweenIncluding(applicationAmount, minAmount, maxAmount)) {
-            throw new InvalidAmountException();
-        }
-    }
-
-    private void validateTerm(Integer term) {
-        final Integer minTerm = loanManagerProperties.getMinTermDays();
-        final Integer maxTerm = loanManagerProperties.getMaxTermDays();
-
-        if(!ValidationUtils.isBetweenIncluding(term, minTerm, maxTerm)) {
-            throw new InvalidTermException();
-        }
     }
 }

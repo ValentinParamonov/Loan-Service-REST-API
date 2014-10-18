@@ -4,7 +4,7 @@ import paramonov.valentine.loan_service.util.Time;
 
 import java.math.BigDecimal;
 
-public interface LoanManagerProperties {
+public interface LoanServiceProperties {
     Time getRiskyTimeFrom();
 
     Time getRiskyTimeTill();
