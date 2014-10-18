@@ -14,25 +14,31 @@ A project created for evaluation by 4finance HR department
 * The whole history of loans is visible for clients, including loan extensions.
     
 ### Services
-#####Add User                                       
+#####Add User
 ```
-Url:                /users?userName=:name&password=:password       
-Authentication:     none                                           
-Method:             POST                                           
-Params:             userName=[*] Required                          
+Url:                /users?userName=:name&password=:password
+Authentication:     none
+Method:             POST
+Params:             userName=[*] Required
                     password=[*] Required                          
-Success Response:   Status 201 (Created)                          
-Error Response:     Status 403 (Forbidden) if :name exists already
+Success Response:   Status 201 (Created)
+Error Response:     Status 400 (Bad Request) if :name is invalid
+                    Content: { error : "Invalid user name value" }
+
+                    Status 400 (Bad Request) if :password is invalid
+                    Content: { error : "Invalid password value" }
+                    
+                    Status 403 (Forbidden) if :name exists already
                     Content: { error : "User name taken" }
 ```
 #####Apply For Loan
 ```
-Url:                /loans?amount=:amount&term=:term                    
-Authentication:     Basic                                               
-Method:             POST                                                
-Params:             amount=[decimal] Required                           
-                    term=[integer] Required                             
-Success Response:   Status 2O0 (OK)                                     
+Url:                /loans?amount=:amount&term=:term
+Authentication:     Basic
+Method:             POST
+Params:             amount=[decimal] Required
+                    term=[integer] Required
+Success Response:   Status 2O0 (OK)
 Error Response:     Status 400 (Bad Request) if :amount is unacceptable 
                     Content: { error : "Invalid amount" } 
                   

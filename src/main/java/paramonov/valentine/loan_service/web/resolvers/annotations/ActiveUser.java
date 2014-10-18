@@ -1,4 +1,4 @@
-package paramonov.valentine.loan_service.web.annotations;
+package paramonov.valentine.loan_service.web.resolvers.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

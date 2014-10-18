@@ -52,53 +52,63 @@ public class TestConfig extends WebMvcConfigurerAdapter {
     public LoanServiceProperties loanServiceProperties() {
         return new LoanServiceProperties() {
             @Override
-            public Time getRiskyTimeFrom() {
+            public Time riskyTimeFrom() {
                 return Time.valueOf("0");
             }
 
             @Override
-            public Time getRiskyTimeTill() {
+            public Time riskyTimeTill() {
                 return Time.valueOf("06:00:00");
             }
 
             @Override
-            public Integer getMaxApplicationsPerDay() {
+            public Integer maxApplicationsPerDay() {
                 return 3;
             }
 
             @Override
-            public BigDecimal getMinAmount() {
+            public BigDecimal minAmount() {
                 return new BigDecimal(50);
             }
 
             @Override
-            public BigDecimal getMaxAmount() {
+            public BigDecimal maxAmount() {
                 return new BigDecimal(500);
             }
 
             @Override
-            public BigDecimal getDefaultInterest() {
+            public BigDecimal defaultInterest() {
                 return new BigDecimal(1.1);
             }
 
             @Override
-            public Integer getMinTermDays() {
+            public Integer minTermDays() {
                 return 5;
             }
 
             @Override
-            public Integer getMaxTermDays() {
+            public Integer maxTermDays() {
                 return 30;
             }
 
             @Override
-            public Integer getExtensionTermDays() {
+            public Integer extensionTermDays() {
                 return 7;
             }
 
             @Override
-            public BigDecimal getExtensionInterestFactor() {
+            public BigDecimal extensionInterestFactor() {
                 return new BigDecimal(1.5);
+            }
+
+            @Override
+            public Integer minUserNameLength() {
+                return 4;
+            }
+
+            @Override
+            public Integer minPasswordLength() {
+                return 6;
             }
         };
     }

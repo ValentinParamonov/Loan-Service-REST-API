@@ -14,7 +14,7 @@ import paramonov.valentine.loan_service.server.ServerRunnerBuilder;
 @CucumberOptions(
     format = {"pretty", "html:target/cucumber"},
     features = {"classpath:paramonov/valentine/loan_service"})
-public class CucumberConfig {
+public class AcceptanceTest {
     public static final int TEST_PORT = 48048;
     private static final String[] configLocations = {
         "paramonov.valentine.loan_service.TestConfig",

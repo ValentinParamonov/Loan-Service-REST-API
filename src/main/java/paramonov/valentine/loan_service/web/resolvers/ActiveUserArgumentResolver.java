@@ -9,7 +9,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import paramonov.valentine.loan_service.db.entities.User;
-import paramonov.valentine.loan_service.web.annotations.ActiveUser;
+import paramonov.valentine.loan_service.web.resolvers.annotations.ActiveUser;
 
 import java.lang.annotation.Annotation;
 

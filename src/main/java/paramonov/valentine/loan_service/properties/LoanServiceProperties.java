@@ -5,23 +5,27 @@ import paramonov.valentine.loan_service.util.Time;
 import java.math.BigDecimal;
 
 public interface LoanServiceProperties {
-    Time getRiskyTimeFrom();
+    Time riskyTimeFrom();
 
-    Time getRiskyTimeTill();
+    Time riskyTimeTill();
 
-    Integer getMaxApplicationsPerDay();
+    Integer maxApplicationsPerDay();
 
-    BigDecimal getMinAmount();
+    BigDecimal minAmount();
 
-    BigDecimal getMaxAmount();
+    BigDecimal maxAmount();
 
-    BigDecimal getDefaultInterest();
+    BigDecimal defaultInterest();
 
-    Integer getMinTermDays();
+    Integer minTermDays();
 
-    Integer getMaxTermDays();
+    Integer maxTermDays();
 
-    Integer getExtensionTermDays();
+    Integer extensionTermDays();
 
-    BigDecimal getExtensionInterestFactor();
+    BigDecimal extensionInterestFactor();
+
+    Integer minUserNameLength();
+
+    Integer minPasswordLength();
 }

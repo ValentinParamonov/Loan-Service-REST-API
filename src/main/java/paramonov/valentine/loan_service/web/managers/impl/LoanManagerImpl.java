@@ -19,7 +19,7 @@ import paramonov.valentine.loan_service.properties.LoanServiceProperties;
 import paramonov.valentine.loan_service.util.DateUtils;
 import paramonov.valentine.loan_service.web.managers.LoanManager;
 import paramonov.valentine.loan_service.web.managers.RiskManager;
-import paramonov.valentine.loan_service.web.managers.exceptions.ApplicationDeniedException;
+import paramonov.valentine.loan_service.web.managers.exceptions.ApplicationRejectedException;
 import paramonov.valentine.loan_service.web.managers.exceptions.InvalidApplicationIdException;
 
 import javax.annotation.PostConstruct;
@@ -63,7 +63,7 @@ final class LoanManagerImpl implements LoanManager {
         loanApplicationValidator.validateLoanApplication(applicationDetails);
         try {
             riskManager.analyzeRisks(applicationDetails);
-        } catch(ApplicationDeniedException ade) {
+        } catch(ApplicationRejectedException ade) {
             eventLogger.logApplicationDenied(applicationDetails);
             throw ade;
         }
@@ -92,7 +92,7 @@ final class LoanManagerImpl implements LoanManager {
 
         try {
             riskManager.checkNumberOfApplications(applicationDetails);
-        } catch(ApplicationDeniedException ade) {
+        } catch(ApplicationRejectedException ade) {
             eventLogger.logApplicationDenied(applicationDetails);
             throw ade;
         }
@@ -125,8 +125,8 @@ final class LoanManagerImpl implements LoanManager {
     }
 
     private void extendLoan(LoanApplication application) {
-        final Integer extensionTerm = loanServiceProperties.getExtensionTermDays();
-        final BigDecimal interestFactor = loanServiceProperties.getExtensionInterestFactor();
+        final Integer extensionTerm = loanServiceProperties.extensionTermDays();
+        final BigDecimal interestFactor = loanServiceProperties.extensionInterestFactor();
         final Date dueDate = application.getDueDate();
         final BigDecimal interest = application.getLoanInterest();
         final Date newDueDate = DateUtils.getDateAfterDays(dueDate, extensionTerm);
@@ -142,7 +142,7 @@ final class LoanManagerImpl implements LoanManager {
         final User applicant = application.getApplicant();
         final Integer term = application.getTerm();
         final Date dueDate = DateUtils.getDateAfterDays(term);
-        final BigDecimal interest = loanServiceProperties.getDefaultInterest();
+        final BigDecimal interest = loanServiceProperties.defaultInterest();
 
         return new LoanApplication()
             .setLoanAmount(amount)

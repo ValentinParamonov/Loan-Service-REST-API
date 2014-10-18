@@ -23,9 +23,9 @@ public class ApplicationStepDefinitions {
     @Given("^a user \"(.*)\" with password \"(.*)\"$")
     public void aUserWithPassword(final String userName, final String password) {
         final RestTemplate template = new RestTemplate();
-        final String url = "http://localhost:{port}/user?userName={name}&password={password}";
+        final String url = "http://localhost:{port}/users?userName={name}&password={password}";
         final ResponseEntity<?> response = template.exchange(url, HttpMethod.POST, null, (Class) null,
-            CucumberConfig.TEST_PORT, userName, password);
+            AcceptanceTest.TEST_PORT, userName, password);
         final HttpStatus status = response.getStatusCode();
 
         assertThat(status, equalTo(HttpStatus.CREATED));
@@ -36,8 +36,8 @@ public class ApplicationStepDefinitions {
     @When("^the user performs (.*) request with the amount of (.*) and the term of (.*)$")
     public void theUserPerformsRequestWithAmountAndTerm(HttpMethod method, BigDecimal amount, Integer term) {
         final RestTemplate template = new RestTemplate();
-        final String url = "http://localhost:{port}/loan?amount={amount}&term={term}";
-        response = template.exchange(url, method, authorizationRequest, (Class) null, CucumberConfig.TEST_PORT, amount, term);
+        final String url = "http://localhost:{port}/loans?amount={amount}&term={term}";
+        response = template.exchange(url, method, authorizationRequest, (Class) null, AcceptanceTest.TEST_PORT, amount, term);
     }
 
     @Then("the response status should be (.*)")

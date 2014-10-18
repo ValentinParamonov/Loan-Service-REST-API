@@ -29,11 +29,17 @@ public final class ExceptionLoggingHandler extends ErrorHandler {
         }
 
         final int errorCode = (int) request.getAttribute("javax.servlet.error.status_code");
-        final PrintWriter writer = response.getWriter();
 
         log.catching(Level.ERROR, throwable);
-        response.setStatus(errorCode);
+        respondWithErrorCode(request, response, errorCode);
+    }
+
+    private void respondWithErrorCode(HttpServletRequest request, HttpServletResponse response, int errorCode)
+        throws IOException {
+        final PrintWriter writer = response.getWriter();
+
         response.setContentType("text/html;charset=utf-8");
+        response.setStatus(errorCode);
         writeErrorPage(request, writer, errorCode);
     }
 

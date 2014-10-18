@@ -40,52 +40,72 @@ class LoanServicePropertiesConfig {
     @Value("${loan.service.extension.interestFactor:1.5}")
     private BigDecimal extensionInterestFactor;
 
+    @Value("${loan.service.minUserNameLength:4}")
+    private Integer minUsernameLength;
+
+    @Value("${loan.service.minPasswordLength:6}")
+    private Integer minPasswordLength;
+
     @Bean
     public LoanServiceProperties loanServiceProperties() {
         return new LoanServiceProperties() {
             @Override
-            public Time getRiskyTimeFrom() {
+            public Time riskyTimeFrom() {
                 return riskyTimeFrom;
             }
 
             @Override
-            public Time getRiskyTimeTill() {
+            public Time riskyTimeTill() {
                 return riskyTimeTill;
             }
 
             @Override
-            public Integer getMaxApplicationsPerDay() {
+            public Integer maxApplicationsPerDay() {
                 return maxApplicationsPerDay;
             }
 
-            @Override public BigDecimal getMinAmount() {
+            @Override public BigDecimal minAmount() {
                 return minAmount;
             }
 
             @Override
-            public BigDecimal getMaxAmount() {
+            public BigDecimal maxAmount() {
                 return maxAmount;
             }
 
-            @Override public BigDecimal getDefaultInterest() {
+            @Override
+            public BigDecimal defaultInterest() {
                 return defaultInterest;
             }
 
-            @Override public Integer getMinTermDays() {
+            @Override
+            public Integer minTermDays() {
                 return minTermDays;
             }
 
             @Override
-            public Integer getMaxTermDays() {
+            public Integer maxTermDays() {
                 return maxTermDays;
             }
 
-            @Override public Integer getExtensionTermDays() {
+            @Override
+            public Integer extensionTermDays() {
                 return extensionTermDays;
             }
 
-            @Override public BigDecimal getExtensionInterestFactor() {
+            @Override
+            public BigDecimal extensionInterestFactor() {
                 return extensionInterestFactor;
+            }
+
+            @Override
+            public Integer minUserNameLength() {
+                return minUsernameLength;
+            }
+
+            @Override
+            public Integer minPasswordLength() {
+                return minPasswordLength;
             }
         };
     }
