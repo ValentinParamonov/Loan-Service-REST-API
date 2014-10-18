@@ -22,7 +22,8 @@ Method:             POST
 Params:             userName=[*] Required                          
                     password=[*] Required                          
 Success Response:   Status 201 (Created)                          
-Error Response:     Status 403 (Forbidden) if :name exists already 
+Error Response:     Status 403 (Forbidden) if :name exists already
+                    Content: { error : "User name taken" }
 ```
 #####Apply For Loan
 ```
