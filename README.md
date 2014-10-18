@@ -1,4 +1,4 @@
-Loan-Service-REST-API
+Loan Service REST API
 =====================
 
 A project created for evaluation by 4finance HR department
