@@ -19,8 +19,8 @@ A project created for evaluation by 4finance HR department
 Url:                /users?userName=:name&password=:password
 Authentication:     none
 Method:             POST
-Params:             userName=[*] Required
-                    password=[*] Required                          
+Params:             userName=[string] Required
+                    password=[string] Required                          
 Success Response:   Status 201 (Created)
 Error Response:     Status 400 (Bad Request) if :name is invalid
                     Content: { error : "Invalid user name value" }
