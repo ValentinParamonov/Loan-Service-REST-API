@@ -25,11 +25,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {TestDatabaseConfig.class, LoanRepositoryImplTestConfig.class})
+@ContextConfiguration(classes = {TestDatabaseConfig.class, RepositoryTestConfig.class})
 @TransactionConfiguration(defaultRollback = false)
 public class LoanEventRepositoryImplTest {
     private static final String IP_ADDRESS = "ip";
     private static final LoanEventStatus STATUS = LoanEventStatus.APPLICATION;
+    private static boolean populated;
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -46,18 +47,14 @@ public class LoanEventRepositoryImplTest {
     private LoanApplicationVo loanApplicationVo;
 
     @Before
+    @Transactional
     public void setUp() {
         setInstanceVariables();
-    }
-
-    @Test
-    @Transactional
-    public void populateDatabase() {
-        final Session session = sessionFactory.getCurrentSession();
-
-        session.save(user);
-        session.save(loanApplication);
-        loanEventRepositoryImpl.newEvent(loanApplicationVo, loanApplication, STATUS);
+        if(populated) {
+            return;
+        }
+        populated = true;
+        populateDatabase();
     }
 
     @Test
@@ -68,12 +65,12 @@ public class LoanEventRepositoryImplTest {
     }
 
     @Test
-    public void testNewEvent_CompareSavedObjectUserWithLoadedOne_ShouldBeEqual() {
-        final String loadedUserName =
-            jdbcTemplate.queryForObject("select u.name from event join user as u", String.class);
-        final String userName = user.getName();
+    public void testNewEvent_CompareEventUserIdWithSavedUserId_ShouldBeEqual() {
+        final String userIdQuery = String.format("select id from user where name='%s'", user.getName());
+        final Long userId = jdbcTemplate.queryForObject(userIdQuery, Long.class);
+        final Long eventUserID = jdbcTemplate.queryForObject("select user from event", Long.class);
 
-        assertThat(loadedUserName, equalTo(userName));
+        assertThat(eventUserID, equalTo(userId));
     }
 
     @Test
@@ -90,6 +87,14 @@ public class LoanEventRepositoryImplTest {
         final int numberOfApplications = loanEventRepositoryImpl.getNumberOfApplicationsInLast24Hours(IP_ADDRESS);
 
         assertThat(numberOfApplications, equalTo(1));
+    }
+
+    private void populateDatabase() {
+        final Session session = sessionFactory.getCurrentSession();
+
+        session.save(user);
+        session.save(loanApplication);
+        loanEventRepositoryImpl.newEvent(loanApplicationVo, loanApplication, STATUS);
     }
 
     private void setInstanceVariables() {

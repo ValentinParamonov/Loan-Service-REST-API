@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Component("loanApplicationValidator")
 class LoanApplicationValidatorImpl implements LoanApplicationValidator {
     @Autowired
-    private LoanServiceProperties loanServiceProperties;
+    LoanServiceProperties loanServiceProperties;
 
     @Override
     public void validateLoanApplication(LoanApplicationVo applicationDetails) {

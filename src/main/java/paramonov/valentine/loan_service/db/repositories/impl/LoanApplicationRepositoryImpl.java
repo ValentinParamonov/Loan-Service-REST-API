@@ -32,7 +32,8 @@ final class LoanApplicationRepositoryImpl implements LoanApplicationRepository {
         final SimpleExpression eqUser = Restrictions.eq("user", user);
         final SimpleExpression eqId = Restrictions.eq("id", applicationId);
 
-        return (LoanApplication) session.createCriteria(LoanApplication.class)
+        return (LoanApplication) session
+            .createCriteria(LoanApplication.class)
             .add(eqUser)
             .add(eqId)
             .uniqueResult();
