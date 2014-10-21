@@ -1,6 +1,5 @@
 package paramonov.valentine.loan_service.common.dtos;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import paramonov.valentine.loan_service.common.LoanEventStatus;
 
 import java.util.Date;

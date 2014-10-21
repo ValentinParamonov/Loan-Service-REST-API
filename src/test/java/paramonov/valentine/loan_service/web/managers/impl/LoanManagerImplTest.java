@@ -134,7 +134,11 @@ public class LoanManagerImplTest {
 
     @Test
     public void testExtendLoan_WhenNoExceptions_EventShouldBeLogged() {
+        final Date date = new Date();
         doReturn(loanApplication).when(loanApplicationRepository).getUserApplication(null, 0);
+        doReturn(date).when(loanApplication).getDueDate();
+        doReturn(BigDecimal.ZERO).when(loanApplication).getLoanInterest();
+        doReturn(BigDecimal.ZERO).when(loanServiceProperties).extensionInterestFactor();
 
         loanManagerImpl.extendLoan(loanApplicationVo, 0);
 
@@ -143,17 +147,21 @@ public class LoanManagerImplTest {
 
     @Test
     public void testModifyApplication_WhenComparingDateDifference_ShouldBeEqualToExtensionTerm() {
-        final Date originalDate = loanApplication.getDueDate();
-        final long extensionTermDays = loanServiceProperties.extensionTermDays();
+        final Date date = new Date();
+        final int extensionTerm = 0;
+        final long millisInADay = 1000 * 60 * 60;
+        doReturn(date).when(loanApplication).getDueDate();
+        doReturn(extensionTerm).when(loanServiceProperties).extensionTermDays();
         doReturn(loanApplication).when(loanApplicationRepository).getUserApplication(null, 0);
-        long millisInADay = 1000 * 60 * 60;
+        doReturn(BigDecimal.ZERO).when(loanApplication).getLoanInterest();
+        doReturn(BigDecimal.ZERO).when(loanServiceProperties).extensionInterestFactor();
 
         loanManagerImpl.modifyApplication(loanApplication);
         final Date newDate = loanApplication.getDueDate();
-        final long timeDiff = newDate.getTime() - originalDate.getTime();
+        final long timeDiff = newDate.getTime() - date.getTime();
         final long timeDiffDays = timeDiff / millisInADay;
 
-        assertThat(timeDiffDays, equalTo(extensionTermDays)) ;
+        assertThat(timeDiffDays, equalTo((long) extensionTerm)) ;
     }
 
     @Test
@@ -162,12 +170,13 @@ public class LoanManagerImplTest {
         final LoanApplication application = new LoanApplication()
             .setDueDate(new Date())
             .setLoanInterest(originalInterest);
-        final BigDecimal interestFactor = loanServiceProperties.extensionInterestFactor();
+        final BigDecimal interestFactor = BigDecimal.TEN;
         doReturn(application).when(loanApplicationRepository).getUserApplication(null, 0);
+        doReturn(BigDecimal.ZERO).when(loanApplication).getLoanInterest();
+        doReturn(interestFactor).when(loanServiceProperties).extensionInterestFactor();
 
         loanManagerImpl.modifyApplication(application);
         final BigDecimal newInterest = application.getLoanInterest();
-
         final BigDecimal interestDifference = newInterest.divide(originalInterest);
 
         assertThat(interestDifference, equalTo(interestFactor)) ;

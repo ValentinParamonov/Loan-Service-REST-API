@@ -1,7 +1,7 @@
 package paramonov.valentine.loan_service.web.managers.impl;
 
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.Logger;
+import org.jasypt.encryption.StringEncryptor;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +12,11 @@ import paramonov.valentine.loan_service.db.entities.LoanApplication;
 import paramonov.valentine.loan_service.db.repositories.GenericRepository;
 import paramonov.valentine.loan_service.db.repositories.LoanApplicationRepository;
 import paramonov.valentine.loan_service.db.repositories.LoanEventRepository;
+import paramonov.valentine.loan_service.db.repositories.UserRepository;
 import paramonov.valentine.loan_service.properties.LoanServiceProperties;
 import paramonov.valentine.loan_service.web.managers.RiskManager;
 
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Objects;
 
 @Configuration
 class ManagerTestConfig {
@@ -28,6 +27,14 @@ class ManagerTestConfig {
         Mockito.doNothing().when(loanManagerImpl).init();
 
         return loanManagerImpl;
+    }
+
+    @Bean RiskManagerImpl riskManagerImpl() {
+        return Mockito.spy(new RiskManagerImpl());
+    }
+
+    @Bean UserManagerImpl userManagerImpl() {
+        return Mockito.spy(new UserManagerImpl());
     }
 
     @Bean LoanApplicationRepository loanApplicationRepository() {
@@ -42,12 +49,12 @@ class ManagerTestConfig {
         return Mockito.mock(LoanEventRepository.class);
     }
 
+    @Bean UserRepository userRepository() {
+        return Mockito.mock(UserRepository.class);
+    }
+
     @Bean LoanServiceProperties loanServiceProperties() {
-        final LoanServiceProperties properties = Mockito.mock(LoanServiceProperties.class);
-
-        Mockito.when(properties.extensionInterestFactor()).thenReturn(BigDecimal.TEN);
-
-        return properties;
+        return Mockito.mock(LoanServiceProperties.class);
     }
 
     @Bean RiskManager riskManager() {
@@ -62,19 +69,19 @@ class ManagerTestConfig {
         return Mockito.mock(LoanApplicationValidator.class);
     }
 
-    @Bean
-    LoanApplicationVo loanApplicationVo() {
+    @Bean LoanApplicationVo loanApplicationVo() {
         return Mockito.mock(LoanApplicationVo.class);
     }
 
-    @Bean
-    LoanApplication loanApplication() {
+    @Bean LoanApplication loanApplication() {
         final LoanApplication application = Mockito.mock(LoanApplication.class);
 
-        Mockito.when(application.getDueDate()).thenReturn(new Date());
-        Mockito.when(application.getLoanInterest()).thenReturn(BigDecimal.ONE);
-        Mockito.when(application.setDueDate(Mockito.any(Date.class))).thenReturn(application);
+        Mockito.doReturn(application).when(application).setDueDate(Mockito.any(Date.class));
 
         return application;
+    }
+
+    @Bean StringEncryptor stringEncryptor() {
+        return Mockito.mock(StringEncryptor.class);
     }
 }

@@ -10,7 +10,7 @@ import paramonov.valentine.loan_service.web.managers.UserManager;
 import paramonov.valentine.loan_service.web.managers.exceptions.UserNameAlreadyExistsException;
 
 @Component("userManager")
-final class UserManagerImpl implements UserManager {
+class UserManagerImpl implements UserManager {
     @Autowired
     private UserRepository userRepository;
 
@@ -31,7 +31,7 @@ final class UserManagerImpl implements UserManager {
         userRepository.newUser(userName, encryptedPassword);
     }
 
-    private void checkUserNameAvailable(String userName) {
+    void checkUserNameAvailable(String userName) {
         final User user = userRepository.getUserByName(userName);
         if(user != null) {
             throw new UserNameAlreadyExistsException();

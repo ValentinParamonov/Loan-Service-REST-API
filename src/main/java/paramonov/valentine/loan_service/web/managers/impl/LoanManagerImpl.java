@@ -24,8 +24,6 @@ import paramonov.valentine.loan_service.web.managers.exceptions.InvalidApplicati
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,8 +53,7 @@ class LoanManagerImpl implements LoanManager {
 
     Logger log;
 
-    @PostConstruct
-    void init() {
+    @PostConstruct void init() {
         log = LogManager.getLogger(getClass());
     }
 

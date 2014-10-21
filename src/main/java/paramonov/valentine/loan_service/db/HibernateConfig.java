@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.lang.management.PlatformLoggingMXBean;
 import java.util.Properties;
 
 @Configuration

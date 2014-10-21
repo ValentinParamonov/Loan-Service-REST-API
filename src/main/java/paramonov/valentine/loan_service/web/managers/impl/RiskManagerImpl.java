@@ -12,7 +12,7 @@ import paramonov.valentine.loan_service.web.managers.exceptions.ApplicationRejec
 import java.math.BigDecimal;
 
 @Component("riskManager")
-final class RiskManagerImpl implements RiskManager {
+class RiskManagerImpl implements RiskManager {
     @Autowired
     private LoanServiceProperties loanServiceProperties;
 
@@ -46,7 +46,7 @@ final class RiskManagerImpl implements RiskManager {
         return maxAmount.equals(applicationAmount);
     }
 
-    private void checkRiskyTime() {
+    void checkRiskyTime() {
         final Time riskyTimeFrom = loanServiceProperties.riskyTimeFrom();
         final Time riskyTimeTill = loanServiceProperties.riskyTimeTill();
         final Time currentTime = new Time();

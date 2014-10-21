@@ -16,7 +16,6 @@ import paramonov.valentine.loan_service.db.entities.User;
 import paramonov.valentine.loan_service.db.repositories.LoanEventRepository;
 import paramonov.valentine.loan_service.util.DateUtils;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
